@@ -1,0 +1,31 @@
+name: stopp_uhr
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: "^0.13.1"
+  flutter_lints: ^3.0.0
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/background/
+    - assets/graphics/
+
+# flutter pub run flutter_launcher_icons:main
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/stoppUhr.png"  #hier muss das Icon der Stoppuhr hin.
