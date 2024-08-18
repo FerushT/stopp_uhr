@@ -10,12 +10,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Stoppuhr",
-      theme: ThemeData(
-          primarySwatch:
-              Colors.blue), //prüfen, ob es sinn macht. ansonsten weg damit.
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
