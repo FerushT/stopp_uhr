@@ -10,25 +10,29 @@ class StopwatchScreen extends StatefulWidget {
 }
 
 class _StopwatchScreenState extends State<StopwatchScreen> {
-  int _elapsedTime = 0;
-  bool _isRunning = false;
-  Timer? _timer; // Variabler Timer zur Steuerung der Uhr
+  int _elapsedTime =
+      0; // ist die Zeit die seit dem Start der Stoppuhr vergangen ist.
+  bool _isRunning = false; // Gibt an, ob die Stoppuhr gerade läuft.
+  Timer? _timer; // Variabler Timer der die Zeit trackt.
 
-  // Dauer für die vollstänidge Kreisanimation
-  final int _fullDuration = 120000; // 2 Minuten in Millisekunden
+  // Dauer für die vollstänidge Kreisanimation, (2 Minuten in Millisekunden)
+  final int _fullDuration = 120000;
 
+  // Startet die Stoppuhr, wenn die Stoppuhr bereits läuft, tut diese Methode nichts.
   _startStopwatch() async {
     if (_isRunning) return;
 
     _isRunning = true;
 
+    // Das ist ein Timer, der alle 10 Millisekunden die Zeit erhöht und durch das setState das UI aktualisiert.
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       setState(() {
-        _elapsedTime += 10; // verstreichte Zeit erhöhen
+        _elapsedTime += 10;
       });
     });
   }
 
+  // Stoppt die Stoppuhr und beendet den Timer.
   _stopStopwatch() async {
     setState(() {
       _isRunning = false;
@@ -36,6 +40,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _timer?.cancel();
   }
 
+  // Setzt die Zeit zurück und stoppt den Timer.
   _resetStopwatch() async {
     setState(() {
       _elapsedTime = 0;
@@ -44,6 +49,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _timer?.cancel();
   }
 
+  //Dieser Code berechnet die Anzahl der Minuten aus der Zeitdifferenz _elapsedTime in Millisekunden und
+  //wandelt die Minutenzahl in einen String um. Er stellt sicher,
+  //dass dieser String immer mindestens zwei Ziffern hat, indem er eventuell führende Nullen hinzufügt.
   @override
   Widget build(BuildContext context) {
     final minutes = (_elapsedTime ~/ 60000).toString().padLeft(2, "0");
@@ -51,7 +59,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     final milliseconds =
         ((_elapsedTime % 1000) ~/ 10).toString().padLeft(2, "0");
 
-    // Berechnung des Fortschritts als Bruchteil der vollständigen Dauer
+    // Berechnung des Fortschritts als Bruchteil der vollständigen Dauer der Kreisanimation von 2 Minuten.
     final double progress = _elapsedTime / _fullDuration;
 
     return Center(
@@ -62,6 +70,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Stack(
+              //"Stack" überlagert die UI-Elemente.
               alignment: Alignment.center,
               children: [
                 //Kreisförmiger Fortschrittsindikator
@@ -69,15 +78,18 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                   width: 260,
                   height: 260,
                   child: CircularProgressIndicator(
+                    //ist ein kreisförmiger Fortschritssbalken.
                     value: progress,
                     strokeWidth: 12,
                     backgroundColor: const Color.fromARGB(255, 218, 208, 208),
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                        Color.fromARGB(255, 224, 144, 25)),
+                        Color.fromARGB(255, 224, 148, 25)),
                   ),
                 ),
-                // Zeit in der Mitte des kreisförmigen Indikators
 
+                // Zeit die Zeit (Minuten, Sekunden, Millisekunden) in der Mitte des Kreises an.
+                // Ich habe für jeden einzelnen Zeitwert (Minunten, Sekunden, Millisekunden) eine Sized Box angewendet
+                // damit die Zeitangabe konstant in seinem Bereich bleibt und nicht "wackelt", wenn die Stoppuhr läuft.
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -120,14 +132,19 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 ),
               ],
             ),
+            // Eine Reihe mit den Steuerungsknöpfen, welche durch mainAxisAlignment.center mittig platziert wird.
+            // (Start,Stopp und Reset).
             const SizedBox(height: 100),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Dieser Block zeigt verschiedene ElevatedButton´s für "Starten", "Stoppen" u. "Zurücksetzen" der Stoppuhr an.
+                // _is Running ändert den Stil und ihre Funktion der Buttons je nach Zustand.
                 _isRunning
                     ? ElevatedButton(
-                        onPressed:
-                            !_isRunning ? null : () async => _stopStopwatch(),
+                        onPressed: () async {
+                          await _stopStopwatch();
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 232, 114, 106),
@@ -140,9 +157,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         child: const Text("Stoppen"),
                       )
                     : ElevatedButton(
-                        onPressed: _isRunning
-                            ? null
-                            : () async => await _startStopwatch(),
+                        onPressed: () async {
+                          await _startStopwatch();
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.black,
