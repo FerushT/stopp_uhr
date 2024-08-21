@@ -49,7 +49,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _timer?.cancel();
   }
 
-  //Dieser Code berechnet die Anzahl der Minuten aus der Zeitdifferenz _elapsedTime in Millisekunden und
+  //Berechnet die Anzahl der Minuten aus der Zeitdifferenz _elapsedTime in Millisekunden und
   //wandelt die Minutenzahl in einen String um. Er stellt sicher,
   //dass dieser String immer mindestens zwei Ziffern hat, indem er eventuell führende Nullen hinzufügt.
   @override
@@ -59,7 +59,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     final milliseconds =
         ((_elapsedTime % 1000) ~/ 10).toString().padLeft(2, "0");
 
-    // Berechnung des Fortschritts als Bruchteil der vollständigen Dauer der Kreisanimation von 2 Minuten.
+    // _elapsedTime/_fullduration bedeutet, dass die bereits verstrichene Zeit durch die Gesamtdauer teilt.
     final double progress = _elapsedTime / _fullDuration;
 
     return Center(
@@ -87,7 +87,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                   ),
                 ),
 
-                // Zeit die Zeit (Minuten, Sekunden, Millisekunden) in der Mitte des Kreises an.
+                // Die Zeiten (Minuten, Sekunden, Millisekunden) wird in der Mitte des CircularProgressIndicator angezeigt.
                 // Ich habe für jeden einzelnen Zeitwert (Minunten, Sekunden, Millisekunden) eine Sized Box angewendet
                 // damit die Zeitangabe konstant in seinem Bereich bleibt und nicht "wackelt", wenn die Stoppuhr läuft.
                 Row(
@@ -142,8 +142,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 // _is Running ändert den Stil und ihre Funktion der Buttons je nach Zustand.
                 _isRunning
                     ? ElevatedButton(
-                        onPressed: () async {
-                          await _stopStopwatch();
+                        onPressed: () {
+                          _stopStopwatch();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -157,8 +157,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         child: const Text("Stoppen"),
                       )
                     : ElevatedButton(
-                        onPressed: () async {
-                          await _startStopwatch();
+                        onPressed: () {
+                          _startStopwatch();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
